@@ -6,4 +6,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AgendaReactiveRepository
-  extends ReactiveMongoRepository<Agenda, Integer> { }
+  extends ReactiveMongoRepository<Agenda, String> { }

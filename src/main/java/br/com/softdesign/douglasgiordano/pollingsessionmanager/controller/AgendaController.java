@@ -31,9 +31,8 @@ public class AgendaController {
      */
     @PostMapping(Path.CREATE_AGENDA)
     public ResponseEntity create(@RequestBody AgendaInsertTO agendaTO) throws Exception {
-        Agenda agenda = new Agenda();
-        agenda.setDescription(agendaTO.getDescription());
-        service.createAgenda(agenda);
-        return new ResponseEntity(HttpStatus.OK);
+        Agenda agenda = service.createAgenda(this.service.getAgenda(agendaTO));
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(this.service.getAgendaResponseTO(agenda));
     }
 }

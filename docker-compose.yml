@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  app-server:
+  app:
     # Configuration for building the docker image for the backend service
     build:
       context: . # Use an image built from the specified dockerfile in the `polling-app-server` directory.
@@ -10,15 +10,15 @@ services:
       - "8080:8080" # Forward the exposed port 8080 on the container to port 8080 on the host machine
     restart: always
     depends_on:
-      - mongo # This service depends on mysql. Start that first.
+      - mongo # This service depends. Start that first.
     networks: # Networks to join (Services on the same network can communicate with each other using their name)
       - mongo-compose-network
 
   mongo:
     image: mongo
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: myrootpolling
+      #MONGO_INITDB_ROOT_USERNAME: root
+      #MONGO_INITDB_ROOT_PASSWORD: myrootpolling
     ports:
       - "27017:27017"
     volumes:
