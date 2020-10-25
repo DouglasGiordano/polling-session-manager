@@ -24,7 +24,7 @@ public class AgendaControllerTest extends  SuperControllerTest{
         AgendaInsertTO agendaTO = new AgendaInsertTO();
         agendaTO.setDescription("My Agenda");
         mvc.perform(
-                MockMvcRequestBuilders.get(url)
+                MockMvcRequestBuilders.post(url)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                         .content(this.mapToJson(agendaTO))
