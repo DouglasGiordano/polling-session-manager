@@ -27,7 +27,7 @@ public class AgendaController {
      * @throws Exception
      */
     public ResponseEntity create(@RequestBody AgendaInsertTO agendaTO) throws Exception {
-        Agenda agenda = service.createAgenda(this.service.getAgenda(agendaTO));
+        Agenda agenda = service.saveAgenda(this.service.getAgenda(agendaTO));
         return ResponseEntity.status(HttpStatus.OK)
                 .body(this.service.getAgendaResponseTO(agenda));
     }
