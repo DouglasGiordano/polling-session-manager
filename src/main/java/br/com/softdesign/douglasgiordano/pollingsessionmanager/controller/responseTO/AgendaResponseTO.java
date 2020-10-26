@@ -7,7 +7,7 @@ import lombok.Data;
  * Transfer Object to Agenda Response.
  */
 @Data
-public class AgendaResponseTo {
+public class AgendaResponseTO {
     private String id;
     private String description;
 }

@@ -20,7 +20,7 @@ public class AgendaControllerTest extends  SuperControllerTest{
     @Test
     @Order(1)
     public void createAgendaStatusOkTest() throws Exception {
-        String url = Path.AGENDA + Path.CREATE_AGENDA;
+        String url = Path.AGENDA;
         AgendaInsertTO agendaTO = new AgendaInsertTO();
         agendaTO.setDescription("My Agenda");
         mvc.perform(

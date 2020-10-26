@@ -7,10 +7,7 @@ import br.com.softdesign.douglasgiordano.pollingsessionmanager.service.AgendaSer
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author Douglas Giordano
@@ -29,10 +26,22 @@ public class AgendaController {
      * @return agenda
      * @throws Exception
      */
-    @PostMapping(Path.CREATE_AGENDA)
     public ResponseEntity create(@RequestBody AgendaInsertTO agendaTO) throws Exception {
         Agenda agenda = service.createAgenda(this.service.getAgenda(agendaTO));
         return ResponseEntity.status(HttpStatus.OK)
                 .body(this.service.getAgendaResponseTO(agenda));
+    }
+
+    /**
+     *
+     * @param idAgenda
+     * @return Voting Status
+     * @throws Exception
+     */
+    @PostMapping(Path.OPEN_VOTING_AGENDA)
+    public ResponseEntity openVoting(@PathVariable("idAgenda") String idAgenda) throws Exception {
+        Agenda agenda = service.openVotingAgenda(idAgenda);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(this.service.getVotingStatusTO(agenda));
     }
 }
