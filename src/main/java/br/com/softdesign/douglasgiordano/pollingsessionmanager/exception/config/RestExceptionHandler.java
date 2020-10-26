@@ -5,6 +5,7 @@ import br.com.softdesign.douglasgiordano.pollingsessionmanager.exception.Invalid
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.exception.VotingClosedException;
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.exception.VotingOpenException;
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.exception.config.ApiError;
+import lombok.extern.java.Log;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.data.crossstore.ChangeSetPersister;
@@ -17,10 +18,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.util.logging.Level;
+
 import static org.springframework.http.HttpStatus.*;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
+@Log
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(EntityNotFoundException.class)
@@ -36,6 +40,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
             Exception ex) {
         ApiError apiError = new ApiError(INTERNAL_SERVER_ERROR);
         apiError.setMessage(ex.getMessage());
+        log.log(Level.SEVERE, ex.getMessage());
         return buildResponseEntity(apiError);
     }
 

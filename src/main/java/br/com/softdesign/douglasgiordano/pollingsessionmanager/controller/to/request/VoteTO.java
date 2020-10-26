@@ -1,5 +1,6 @@
-package br.com.softdesign.douglasgiordano.pollingsessionmanager.model.entities;
+package br.com.softdesign.douglasgiordano.pollingsessionmanager.controller.to.request;
 
+import br.com.softdesign.douglasgiordano.pollingsessionmanager.model.entities.EnumVote;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NonNull;
@@ -7,17 +8,17 @@ import lombok.RequiredArgsConstructor;
 
 /**
  * @author Douglas Giordano
- * Vote chosen by an associate
+ * Transfer Object to Vote.
  */
 @Data
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
-public class Vote {
+public class VoteTO {
     @NonNull
-    private Associate associate;
+    private String cpf;
     @NonNull
     private EnumVote vote;
 
-    public Vote(){
+    public VoteTO(){
 
     }
 }

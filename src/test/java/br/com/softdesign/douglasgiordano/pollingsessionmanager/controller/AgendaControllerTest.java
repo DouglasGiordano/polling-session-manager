@@ -1,24 +1,18 @@
 package br.com.softdesign.douglasgiordano.pollingsessionmanager.controller;
 
-import br.com.softdesign.douglasgiordano.pollingsessionmanager.controller.requestTO.AgendaInsertTO;
-import br.com.softdesign.douglasgiordano.pollingsessionmanager.controller.responseTO.AgendaResponseTO;
-import br.com.softdesign.douglasgiordano.pollingsessionmanager.controller.responseTO.VotingStatusResponseTO;
+import br.com.softdesign.douglasgiordano.pollingsessionmanager.controller.to.request.AgendaInsertTO;
+import br.com.softdesign.douglasgiordano.pollingsessionmanager.controller.to.response.AgendaResponseTO;
+import br.com.softdesign.douglasgiordano.pollingsessionmanager.controller.to.response.VotingStatusResponseTO;
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.exception.config.ApiError;
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.model.Path;
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.persistence.AgendaReactiveRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.*;
-import org.modelmapper.internal.util.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import reactor.test.StepVerifier;
-
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 

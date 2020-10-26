@@ -1,4 +1,4 @@
-package br.com.softdesign.douglasgiordano.pollingsessionmanager.controller.requestTO;
+package br.com.softdesign.douglasgiordano.pollingsessionmanager.controller.to.request;
 
 import lombok.Data;
 

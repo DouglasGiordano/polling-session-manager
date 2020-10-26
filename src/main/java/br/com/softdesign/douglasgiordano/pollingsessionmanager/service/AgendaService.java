@@ -1,26 +1,25 @@
 package br.com.softdesign.douglasgiordano.pollingsessionmanager.service;
 
-import br.com.softdesign.douglasgiordano.pollingsessionmanager.controller.requestTO.AgendaInsertTO;
-import br.com.softdesign.douglasgiordano.pollingsessionmanager.controller.responseTO.AgendaResponseTO;
-import br.com.softdesign.douglasgiordano.pollingsessionmanager.controller.responseTO.VotingStatusResponseTO;
+import br.com.softdesign.douglasgiordano.pollingsessionmanager.controller.to.request.AgendaInsertTO;
+import br.com.softdesign.douglasgiordano.pollingsessionmanager.controller.to.request.VoteTO;
+import br.com.softdesign.douglasgiordano.pollingsessionmanager.controller.to.response.AgendaResponseTO;
+import br.com.softdesign.douglasgiordano.pollingsessionmanager.controller.to.response.VotingStatusResponseTO;
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.exception.EntityNotFoundException;
+import br.com.softdesign.douglasgiordano.pollingsessionmanager.exception.UnableVoteException;
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.exception.VotingClosedException;
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.exception.VotingOpenException;
-import br.com.softdesign.douglasgiordano.pollingsessionmanager.model.entities.Agenda;
-import br.com.softdesign.douglasgiordano.pollingsessionmanager.model.entities.VotingAgenda;
-import br.com.softdesign.douglasgiordano.pollingsessionmanager.model.entities.VotingStatus;
+import br.com.softdesign.douglasgiordano.pollingsessionmanager.model.entities.*;
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.persistence.AgendaReactiveRepository;
 import lombok.extern.java.Log;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.data.crossstore.ChangeSetPersister;
-import org.springframework.scheduling.annotation.Async;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
-import java.util.logging.Level;
+import java.util.ArrayList;
 
 @Service
 @Log
@@ -50,10 +49,29 @@ public class AgendaService {
     public Agenda openVotingAgenda(String idAgenda) throws EntityNotFoundException, VotingOpenException, VotingClosedException {
         log.info("Opening agenda poll..");
         Agenda agenda = findAgendaById(idAgenda);
-        VotingAgenda votingAgenda = this.getAgendaStatusVoting(agenda);
+        VotingAgenda votingAgenda = this.getAgendaStatusSessionVoting(agenda);
         agenda.setVoting(votingAgenda);
         agenda = repository.save(agenda).block();
         this.asyncTimeVoting.asyncMethodTimeVoting(idAgenda);
+        return agenda;
+    }
+
+    /**
+     * Vote
+     * @param idAgenda
+     * @return Agenda With Id
+     */
+    public Agenda vote(String idAgenda, Vote vote) throws EntityNotFoundException, VotingOpenException, VotingClosedException, UnableVoteException {
+        Agenda agenda = findAgendaById(idAgenda);
+        VotingAgenda votingAgenda = this.getAgendaStatusSessionVote(agenda);
+        if(this.checkEnableToVote(vote.getAssociate())){
+            log.info("Voting agenda '"+agenda.getDescription()+"'..");
+            if(agenda.getVoting().getVotes() == null){
+                agenda.getVoting().setVotes(new ArrayList<Vote>());
+            }
+            agenda.getVoting().getVotes().add(vote);
+            agenda = repository.save(agenda).block();
+        }
         return agenda;
     }
 
@@ -64,18 +82,63 @@ public class AgendaService {
      * @throws VotingOpenException
      * @throws VotingClosedException
      */
-    public VotingAgenda getAgendaStatusVoting(Agenda agenda) throws VotingOpenException, VotingClosedException {
+    private VotingAgenda getAgendaStatusSessionVoting(Agenda agenda) throws VotingOpenException, VotingClosedException {
         VotingAgenda votingAgenda = agenda.getVoting();
         if(votingAgenda == null) {
             votingAgenda = new VotingAgenda();
-            votingAgenda.setStatus(VotingStatus.OPEN);
-        } else if(votingAgenda.getStatus() == VotingStatus.OPEN){
+            votingAgenda.setStatus(EnumVotingStatus.OPEN);
+        } else if(votingAgenda.getStatus() == EnumVotingStatus.OPEN){
             throw new VotingOpenException("The voting session is now open.");
-        } else if(votingAgenda.getStatus() == VotingStatus.CLOSED){
+        } else if(votingAgenda.getStatus() == EnumVotingStatus.CLOSED){
             throw new VotingClosedException("The voting session is closed.");
         }
 
         return votingAgenda;
+    }
+
+    /**
+     * Get agenda e check status voting to vote
+     * @param agenda
+     * @return voting agenda
+     * @throws VotingOpenException
+     * @throws VotingClosedException
+     */
+    private VotingAgenda getAgendaStatusSessionVote(Agenda agenda) throws VotingOpenException, VotingClosedException {
+        VotingAgenda votingAgenda = agenda.getVoting();
+        if(votingAgenda == null) {
+            votingAgenda = new VotingAgenda();
+            votingAgenda.setStatus(EnumVotingStatus.OPEN);
+        } if(votingAgenda.getStatus() == EnumVotingStatus.CLOSED){
+            throw new VotingClosedException("The voting session is closed.");
+        }
+
+        return votingAgenda;
+    }
+
+    /**
+     * Check status to associate vote
+     * @param associate
+     * @return voting agenda
+     * @throws VotingOpenException
+     * @throws VotingClosedException
+     */
+    private boolean checkEnableToVote(Associate associate) throws UnableVoteException {
+        String cpf = associate.getCpf();
+        String url = "https://user-info.herokuapp.com/users/{cpf}";
+        url.replace("{cpf}", cpf);
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<EnumStatusAssociate> response
+                = restTemplate.getForEntity(url, EnumStatusAssociate.class);
+        if(response.getStatusCode() == HttpStatus.BAD_REQUEST ||
+        response.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR){
+            throw new UnableVoteException("Associate not eligible to vote.");
+        }
+        EnumStatusAssociate status = response.getBody();
+        associate.setStatus(EnumStatusAssociate.UNABLE_TO_VOTE);
+        if(status == EnumStatusAssociate.UNABLE_TO_VOTE){
+            throw new UnableVoteException("Associate not eligible to vote.");
+        }
+        return true;
     }
 
 
@@ -85,42 +148,10 @@ public class AgendaService {
      * @return Agenda
      */
     public Agenda findAgendaById(String id) throws EntityNotFoundException {
-        log.info("Searching agenda by id..");
         Agenda agenda = repository.findById(id).block();
         if(agenda == null){
             throw new EntityNotFoundException("No records found.");
         }
         return agenda;
     }
-
-    /**
-     * Map Agenda to AgendaResponseTO
-     * @param agenda
-     * @return Agenda Response
-     */
-    public AgendaResponseTO getAgendaResponseTO(Agenda agenda){
-        ModelMapper modelMapper = new ModelMapper();
-        return modelMapper.map(agenda, AgendaResponseTO.class);
-    }
-
-    /**
-     * Map Agenda to VotingStatus
-     * @param agenda
-     * @return Voting Status Response
-     */
-    public VotingStatusResponseTO getVotingStatusTO(Agenda agenda){
-        return new VotingStatusResponseTO(agenda.getDescription(), agenda.getVoting().getStatus().name());
-    }
-
-    /**
-     * Map AgendaInsertTO to Agenda
-     * @param agendaTO
-     * @return Agenda
-     */
-    public Agenda getAgenda(AgendaInsertTO agendaTO){
-        ModelMapper modelMapper = new ModelMapper();
-        return modelMapper.map(agendaTO, Agenda.class);
-    }
-
-
 }
