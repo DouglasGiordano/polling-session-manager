@@ -50,14 +50,21 @@ public class AgendaService {
     public Agenda openVotingAgenda(String idAgenda) throws EntityNotFoundException, VotingOpenException, VotingClosedException {
         log.info("Opening agenda poll..");
         Agenda agenda = findAgendaById(idAgenda);
-        VotingAgenda votingAgenda = this.getStatusVoting(agenda);
+        VotingAgenda votingAgenda = this.getAgendaStatusVoting(agenda);
         agenda.setVoting(votingAgenda);
         agenda = repository.save(agenda).block();
         this.asyncTimeVoting.asyncMethodTimeVoting(idAgenda);
         return agenda;
     }
 
-    public VotingAgenda getStatusVoting(Agenda agenda) throws VotingOpenException, VotingClosedException {
+    /**
+     * Get agenda e check status voting
+     * @param agenda
+     * @return voting agenda
+     * @throws VotingOpenException
+     * @throws VotingClosedException
+     */
+    public VotingAgenda getAgendaStatusVoting(Agenda agenda) throws VotingOpenException, VotingClosedException {
         VotingAgenda votingAgenda = agenda.getVoting();
         if(votingAgenda == null) {
             votingAgenda = new VotingAgenda();
@@ -65,7 +72,7 @@ public class AgendaService {
         } else if(votingAgenda.getStatus() == VotingStatus.OPEN){
             throw new VotingOpenException("The voting session is now open.");
         } else if(votingAgenda.getStatus() == VotingStatus.CLOSED){
-            throw new VotingClosedException("The voting session is now open.");
+            throw new VotingClosedException("The voting session is closed.");
         }
 
         return votingAgenda;
