@@ -8,4 +8,5 @@ import java.util.List;
 public class VotingAgenda {
     private List<Vote> votes;
     private int timeSeconds = 60; //60 seconds
+    private VotingStatus status;
 }
