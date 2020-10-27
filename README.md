@@ -7,6 +7,7 @@ https://github.com/DouglasGiordano/polling-session-manager/wiki/Requirements
 
 ### RUN on Ubuntu
 Install Gradle, MongoDB, RabbitMQ and Java 11
+Execute MongoDB (Port 27017) and RabbitMQ (Port 5672|15672)
 
 `gradle clean`
 
