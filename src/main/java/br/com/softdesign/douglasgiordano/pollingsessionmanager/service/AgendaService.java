@@ -1,9 +1,6 @@
 package br.com.softdesign.douglasgiordano.pollingsessionmanager.service;
 
-import br.com.softdesign.douglasgiordano.pollingsessionmanager.controller.to.request.AgendaInsertTO;
-import br.com.softdesign.douglasgiordano.pollingsessionmanager.controller.to.request.VoteTO;
-import br.com.softdesign.douglasgiordano.pollingsessionmanager.controller.to.response.AgendaResponseTO;
-import br.com.softdesign.douglasgiordano.pollingsessionmanager.controller.to.response.VotingStatusResponseTO;
+import br.com.softdesign.douglasgiordano.pollingsessionmanager.controller.to.request.StatusAssociateTO;
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.exception.EntityNotFoundException;
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.exception.UnableVoteException;
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.exception.VotingClosedException;
@@ -11,7 +8,6 @@ import br.com.softdesign.douglasgiordano.pollingsessionmanager.exception.VotingO
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.model.entities.*;
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.persistence.AgendaReactiveRepository;
 import lombok.extern.java.Log;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -69,8 +65,12 @@ public class AgendaService {
             if(agenda.getVoting().getVotes() == null){
                 agenda.getVoting().setVotes(new ArrayList<Vote>());
             }
-            agenda.getVoting().getVotes().add(vote);
-            agenda = repository.save(agenda).block();
+            if(!agenda.getVoting().getVotes().contains(vote)){
+                agenda.getVoting().getVotes().add(vote);
+                agenda = repository.save(agenda).block();
+            } else {
+                throw new UnableVoteException("Associate has already voted.");
+            }
         }
         return agenda;
     }
@@ -125,16 +125,15 @@ public class AgendaService {
     private boolean checkEnableToVote(Associate associate) throws UnableVoteException {
         String cpf = associate.getCpf();
         String url = "https://user-info.herokuapp.com/users/{cpf}";
-        url.replace("{cpf}", cpf);
+        url = url.replace("{cpf}", cpf);
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<EnumStatusAssociate> response
-                = restTemplate.getForEntity(url, EnumStatusAssociate.class);
-        if(response.getStatusCode() == HttpStatus.BAD_REQUEST ||
-        response.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR){
-            throw new UnableVoteException("Associate not eligible to vote.");
+        ResponseEntity<StatusAssociateTO> response
+                = restTemplate.getForEntity(url, StatusAssociateTO.class);
+        if(response.getStatusCode() != HttpStatus.OK){
+            throw new UnableVoteException("An error occurred while consulting the CPF.");
         }
-        EnumStatusAssociate status = response.getBody();
-        associate.setStatus(EnumStatusAssociate.UNABLE_TO_VOTE);
+        EnumStatusAssociate status = response.getBody().getStatus();
+        associate.setStatus(status);
         if(status == EnumStatusAssociate.UNABLE_TO_VOTE){
             throw new UnableVoteException("Associate not eligible to vote.");
         }

@@ -1,9 +1,6 @@
 package br.com.softdesign.douglasgiordano.pollingsessionmanager.exception.config;
 
-import br.com.softdesign.douglasgiordano.pollingsessionmanager.exception.EntityNotFoundException;
-import br.com.softdesign.douglasgiordano.pollingsessionmanager.exception.InvalidCpfException;
-import br.com.softdesign.douglasgiordano.pollingsessionmanager.exception.VotingClosedException;
-import br.com.softdesign.douglasgiordano.pollingsessionmanager.exception.VotingOpenException;
+import br.com.softdesign.douglasgiordano.pollingsessionmanager.exception.*;
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.exception.config.ApiError;
 import lombok.extern.java.Log;
 import org.springframework.core.Ordered;
@@ -56,6 +53,14 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleVotingClosedException(
             Exception ex) {
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
+        apiError.setMessage(ex.getMessage());
+        return buildResponseEntity(apiError);
+    }
+
+    @ExceptionHandler(UnableVoteException.class)
+    protected ResponseEntity<Object> handleUnableVoteException(
+            Exception ex) {
+        ApiError apiError = new ApiError(HttpStatus.FORBIDDEN);
         apiError.setMessage(ex.getMessage());
         return buildResponseEntity(apiError);
     }

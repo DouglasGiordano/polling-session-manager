@@ -11,13 +11,13 @@ import lombok.Data;
  */
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
-public class VotingStatusResponseTO {
+public class SessionPollingStatusTO {
     @NonNull
     private String description;
     @NonNull
     private String status;
 
-    public VotingStatusResponseTO(){
+    public SessionPollingStatusTO(){
 
     }
 }

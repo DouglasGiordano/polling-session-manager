@@ -2,7 +2,6 @@ package br.com.softdesign.douglasgiordano.pollingsessionmanager.controller;
 
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.controller.to.request.AgendaInsertTO;
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.controller.to.request.VoteTO;
-import br.com.softdesign.douglasgiordano.pollingsessionmanager.controller.to.response.VoteResponseTO;
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.exception.EntityNotFoundException;
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.exception.UnableVoteException;
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.exception.VotingClosedException;
@@ -37,6 +36,7 @@ public class AgendaController {
      * @return agenda
      * @throws Exception
      */
+    @PostMapping()
     public ResponseEntity create(@RequestBody AgendaInsertTO agendaTO) {
         Agenda agenda = service.saveAgenda(this.toService.getAgenda(agendaTO));
         return ResponseEntity.status(HttpStatus.OK)

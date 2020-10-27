@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
  */
 @Data
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
-public class VoteResponseTO {
+public class VoteStatusTO {
     @NonNull
     private String cpf;
     @NonNull
@@ -21,7 +21,7 @@ public class VoteResponseTO {
     @NonNull
     private EnumStatusAssociate status;
 
-    public VoteResponseTO(){
+    public VoteStatusTO(){
 
     }
 }

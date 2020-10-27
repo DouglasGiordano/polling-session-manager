@@ -2,9 +2,9 @@ package br.com.softdesign.douglasgiordano.pollingsessionmanager.service;
 
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.controller.to.request.AgendaInsertTO;
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.controller.to.request.VoteTO;
-import br.com.softdesign.douglasgiordano.pollingsessionmanager.controller.to.response.AgendaResponseTO;
-import br.com.softdesign.douglasgiordano.pollingsessionmanager.controller.to.response.VoteResponseTO;
-import br.com.softdesign.douglasgiordano.pollingsessionmanager.controller.to.response.VotingStatusResponseTO;
+import br.com.softdesign.douglasgiordano.pollingsessionmanager.controller.to.response.AgendaTO;
+import br.com.softdesign.douglasgiordano.pollingsessionmanager.controller.to.response.VoteStatusTO;
+import br.com.softdesign.douglasgiordano.pollingsessionmanager.controller.to.response.SessionPollingStatusTO;
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.model.entities.Agenda;
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.model.entities.Associate;
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.model.entities.Vote;
@@ -19,9 +19,9 @@ public class ToService {
      * @param agenda
      * @return Agenda Response
      */
-    public AgendaResponseTO getAgendaResponseTO(Agenda agenda){
+    public AgendaTO getAgendaResponseTO(Agenda agenda){
         ModelMapper modelMapper = new ModelMapper();
-        return modelMapper.map(agenda, AgendaResponseTO.class);
+        return modelMapper.map(agenda, AgendaTO.class);
     }
 
     /**
@@ -29,8 +29,8 @@ public class ToService {
      * @param agenda
      * @return Voting Status Response
      */
-    public VotingStatusResponseTO getVotingStatusTO(Agenda agenda){
-        return new VotingStatusResponseTO(agenda.getDescription(), agenda.getVoting().getStatus().name());
+    public SessionPollingStatusTO getVotingStatusTO(Agenda agenda){
+        return new SessionPollingStatusTO(agenda.getDescription(), agenda.getVoting().getStatus().name());
     }
 
     /**
@@ -57,7 +57,7 @@ public class ToService {
      * @param vote
      * @return vote
      */
-    public VoteResponseTO getVoteResponse(Vote vote){
-        return new VoteResponseTO(vote.getAssociate().getCpf(), vote.getVote(), vote.getAssociate().getStatus());
+    public VoteStatusTO getVoteResponse(Vote vote){
+        return new VoteStatusTO(vote.getAssociate().getCpf(), vote.getVote(), vote.getAssociate().getStatus());
     }
 }
