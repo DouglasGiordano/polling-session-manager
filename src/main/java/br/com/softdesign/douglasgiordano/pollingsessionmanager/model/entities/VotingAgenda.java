@@ -9,4 +9,5 @@ public class VotingAgenda {
     private List<Vote> votes;
     private int timeSeconds = 60; //60 seconds
     private EnumVotingStatus status;
+    private VotingResult result;
 }

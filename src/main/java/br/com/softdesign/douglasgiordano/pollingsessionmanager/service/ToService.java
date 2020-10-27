@@ -5,9 +5,11 @@ import br.com.softdesign.douglasgiordano.pollingsessionmanager.controller.to.req
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.controller.to.response.AgendaTO;
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.controller.to.response.VoteStatusTO;
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.controller.to.response.SessionPollingStatusTO;
+import br.com.softdesign.douglasgiordano.pollingsessionmanager.controller.to.response.VotingResultTO;
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.model.entities.Agenda;
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.model.entities.Associate;
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.model.entities.Vote;
+import br.com.softdesign.douglasgiordano.pollingsessionmanager.model.entities.VotingResult;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +46,7 @@ public class ToService {
     }
 
     /**
-     *
+     * Map VoteTO to Vote
      * @param voteTo
      * @return vote
      */
@@ -53,11 +55,20 @@ public class ToService {
     }
 
     /**
-     *
+     * Map Vote to VoteStatusTO
      * @param vote
      * @return vote
      */
     public VoteStatusTO getVoteResponse(Vote vote){
         return new VoteStatusTO(vote.getAssociate().getCpf(), vote.getVote(), vote.getAssociate().getStatus());
+    }
+
+    /**
+     * Map VotingResult to VotingResultTO
+     * @param agenda
+     * @return vote
+     */
+    public VotingResultTO getVotingResult(Agenda agenda){
+        return new VotingResultTO(agenda.getId(), agenda.getVoting().getResult().getResult().name());
     }
 }

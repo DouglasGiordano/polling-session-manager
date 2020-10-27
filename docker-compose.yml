@@ -26,6 +26,14 @@ services:
     networks:
       - mongo-compose-network
 
+  rabbitmq:
+    image: rabbitmq:management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - mongo-compose-network
+
 networks:
   mongo-compose-network:
     driver: bridge

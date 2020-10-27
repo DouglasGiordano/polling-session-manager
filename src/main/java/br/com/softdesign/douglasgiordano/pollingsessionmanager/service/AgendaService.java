@@ -5,6 +5,7 @@ import br.com.softdesign.douglasgiordano.pollingsessionmanager.exception.EntityN
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.exception.UnableVoteException;
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.exception.VotingClosedException;
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.exception.VotingOpenException;
+import br.com.softdesign.douglasgiordano.pollingsessionmanager.messaging.ResultPollingQueueSender;
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.model.entities.*;
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.persistence.AgendaReactiveRepository;
 import lombok.extern.java.Log;
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Service
 @Log
@@ -152,5 +155,30 @@ public class AgendaService {
             throw new EntityNotFoundException("No records found.");
         }
         return agenda;
+    }
+
+    /**
+     * Count e get result
+     * @param idAgenda
+     * @return voting result
+     * @throws EntityNotFoundException
+     */
+    public VotingResult getResultPolling(String idAgenda) throws EntityNotFoundException {
+        Agenda agenda = this.findAgendaById(idAgenda);
+        List<Vote> votes = agenda.getVoting().getVotes();
+        long yesCount = votes.stream()
+                .filter((s) -> s.getVote() == EnumVote.YES).count();
+        long noCount = votes.stream()
+                .filter((s) -> s.getVote() == EnumVote.NO).count();
+        VotingResult result = new VotingResult();
+        result.setNumNo(Long.bitCount(noCount));
+        result.setNumYes(Long.bitCount(yesCount));
+        if(yesCount > noCount){
+            result.setResult(EnumVote.YES);
+        } else {
+            result.setResult(EnumVote.NO);
+        }
+        this.repository.save(agenda).block();
+        return result;
     }
 }
