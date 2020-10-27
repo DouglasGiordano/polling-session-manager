@@ -14,7 +14,7 @@ Install Gradle, MongoDB, RabbitMQ and Java 11
 
 `gradle jar`
 
-`java -jar /build/libs/`
+`java -jar build/libs/polling-session-manager-0.0.1-SNAPSHOT.jar`
 
 
 ### RUN on Docker
