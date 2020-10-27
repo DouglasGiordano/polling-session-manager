@@ -4,6 +4,10 @@ import lombok.Data;
 
 import java.util.List;
 
+/**
+ * @author Douglas Montanha Giordano
+ * Session Voting
+ */
 @Data
 public class VotingAgenda {
     private List<Vote> votes;

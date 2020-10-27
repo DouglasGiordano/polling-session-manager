@@ -1,7 +1,6 @@
 package br.com.softdesign.douglasgiordano.pollingsessionmanager.controller;
 
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.controller.to.request.VoteTO;
-import br.com.softdesign.douglasgiordano.pollingsessionmanager.controller.to.response.SessionPollingStatusTO;
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.controller.to.response.VoteStatusTO;
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.exception.config.ApiError;
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.model.Path;
@@ -27,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class VoteControllerTest extends SuperControllerTest{
+public class VoteControllerTest extends SuperControllerTest {
 
     @Autowired
     private AgendaReactiveRepository repository;
@@ -35,7 +34,7 @@ public class VoteControllerTest extends SuperControllerTest{
     private Agenda agenda;
 
     @BeforeEach
-    public void beforeEach(){
+    public void beforeEach() {
         this.agenda = new Agenda();
         this.agenda.setDescription("My Agenda Vote!");
         this.agenda.setVoting(new VotingAgenda());
@@ -44,7 +43,7 @@ public class VoteControllerTest extends SuperControllerTest{
     }
 
     @AfterEach
-    public void afterEach(){
+    public void afterEach() {
         this.repository.deleteById(this.agenda.getId());
         this.agenda = null;
     }
@@ -52,6 +51,7 @@ public class VoteControllerTest extends SuperControllerTest{
 
     /**
      * Request open session polling
+     *
      * @param status
      * @return
      * @throws Exception
@@ -72,12 +72,13 @@ public class VoteControllerTest extends SuperControllerTest{
 
     /**
      * Check result vote
+     *
      * @param voteStatusTO
      * @param expectedCpf
      * @param expectedStatus
      */
-    public void checkAttrVoteStatusTo(VoteStatusTO voteStatusTO, String expectedCpf, EnumStatusAssociate expectedStatus){
-        if(voteStatusTO != null){
+    public void checkAttrVoteStatusTo(VoteStatusTO voteStatusTO, String expectedCpf, EnumStatusAssociate expectedStatus) {
+        if (voteStatusTO != null) {
             Assertions.assertEquals(expectedCpf, voteStatusTO.getCpf());
             Assertions.assertEquals(expectedStatus, voteStatusTO.getStatus());
         } else {
@@ -87,8 +88,8 @@ public class VoteControllerTest extends SuperControllerTest{
 
     @Order(1)
     @ParameterizedTest
-    @ValueSource(strings = { "03048651098",
-            "36611464166", "53774296057", "11315580578", "52717812245", "97558222591", "57318932500" })
+    @ValueSource(strings = {"03048651098",
+            "36611464166", "53774296057", "11315580578", "52717812245", "97558222591", "57318932500"})
     public void voteValidAssociateYesTest(String cpf) throws Exception {
         VoteTO vote = new VoteTO(cpf, EnumVote.YES);
         String content = this.requestOpenSession(status().isOk(), vote).getResponse().getContentAsString();
@@ -98,8 +99,8 @@ public class VoteControllerTest extends SuperControllerTest{
 
     @Order(2)
     @ParameterizedTest
-    @ValueSource(strings = { "03048651098",
-            "36611464166", "53774296057", "11315580578", "52717812245", "97558222591", "57318932500" })
+    @ValueSource(strings = {"03048651098",
+            "36611464166", "53774296057", "11315580578", "52717812245", "97558222591", "57318932500"})
     public void voteValidAssociateNoTest(String cpf) throws Exception {
         VoteTO vote = new VoteTO(cpf, EnumVote.NO);
         String content = this.requestOpenSession(status().isOk(), vote).getResponse().getContentAsString();
@@ -109,19 +110,19 @@ public class VoteControllerTest extends SuperControllerTest{
 
     @Order(3)
     @ParameterizedTest
-    @ValueSource(strings = { "asdasd1",
-            "123123", "5377429asdasd6057", "qeqwe", "123123", " ", "asdasd" })
+    @ValueSource(strings = {"asdasd1",
+            "123123", "5377429asdasd6057", "qeqwe", "123123", " ", "asdasd"})
     public void voteInvalidAssociateTest(String cpf) throws Exception {
         VoteTO vote = new VoteTO(cpf, EnumVote.NO);
         String content = this.requestOpenSession(status().isForbidden(), vote).getResponse().getContentAsString();
         ApiError response = this.mapFromJson(content, ApiError.class);
-        this.checkAttrApiErrorOr(response, new String []{"Associate not eligible to vote.", "An error occurred while consulting the CPF."});
+        this.checkAttrApiErrorOr(response, new String[]{"Associate not eligible to vote.", "An error occurred while consulting the CPF."});
     }
 
     @Order(4)
     @ParameterizedTest
-    @ValueSource(strings = { "03048651098",
-            "36611464166", "53774296057", "11315580578", "52717812245", "97558222591", "57318932500" })
+    @ValueSource(strings = {"03048651098",
+            "36611464166", "53774296057", "11315580578", "52717812245", "97558222591", "57318932500"})
     public void voteInValidAssociateSessionClosedTest(String cpf) throws Exception {
         VoteTO vote = new VoteTO(cpf, EnumVote.YES);
         this.agenda.getVoting().setStatus(EnumVotingStatus.CLOSED);

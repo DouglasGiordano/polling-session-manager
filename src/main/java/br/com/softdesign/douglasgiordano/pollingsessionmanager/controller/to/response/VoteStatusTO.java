@@ -21,7 +21,7 @@ public class VoteStatusTO {
     @NonNull
     private EnumStatusAssociate status;
 
-    public VoteStatusTO(){
+    public VoteStatusTO() {
 
     }
 }

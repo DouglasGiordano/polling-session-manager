@@ -7,8 +7,6 @@ import br.com.softdesign.douglasgiordano.pollingsessionmanager.model.Path;
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.persistence.AgendaReactiveRepository;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EmptySource;
-import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -26,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class AgendaControllerTest extends  SuperControllerTest{
+public class AgendaControllerTest extends SuperControllerTest {
     @Autowired
     private AgendaReactiveRepository repository;
 
@@ -56,8 +54,8 @@ public class AgendaControllerTest extends  SuperControllerTest{
         return response;
     }
 
-    public void checkAttrAgenda(AgendaTO responseTO, String expected){
-        if(responseTO != null){
+    public void checkAttrAgenda(AgendaTO responseTO, String expected) {
+        if (responseTO != null) {
             Assertions.assertEquals(expected, responseTO.getDescription());
             Assertions.assertNotNull(responseTO.getId());
             repository.deleteById(responseTO.getId());
@@ -74,8 +72,8 @@ public class AgendaControllerTest extends  SuperControllerTest{
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "AHHHHHHHHHHHHHHHHHH!@)U()DJSNMdskfnm1203912ebdaskldasmd 1023u1908adnumsidgb1723f1iunhmaosduj9mq8yed192ew19dqasoidjq9w8dy19",
-            "My Agenda", "My Agenda  ", "My Agenda*(!@&$*@$_)!(@", "MY MY", "q23412394743269", "9213901298310238912" })
+    @ValueSource(strings = {"AHHHHHHHHHHHHHHHHHH!@)U()DJSNMdskfnm1203912ebdaskldasmd 1023u1908adnumsidgb1723f1iunhmaosduj9mq8yed192ew19dqasoidjq9w8dy19",
+            "My Agenda", "My Agenda  ", "My Agenda*(!@&$*@$_)!(@", "MY MY", "q23412394743269", "9213901298310238912"})
     @Order(2)
     public void createAgendaSuperNameValidTest(String description) throws Exception {
         String expected = description;
@@ -86,7 +84,7 @@ public class AgendaControllerTest extends  SuperControllerTest{
     @ParameterizedTest
     //@NullSource
     //@EmptySource
-    @ValueSource(strings = { " ", "   ", "\t", "\n" })
+    @ValueSource(strings = {" ", "   ", "\t", "\n"})
     @Order(3)
     public void createAgendaSuperNameInvalidTest(String description) throws Exception {
         String expected = description;

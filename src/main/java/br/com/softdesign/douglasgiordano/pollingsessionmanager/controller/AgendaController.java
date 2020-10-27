@@ -41,6 +41,7 @@ public class AgendaController {
 
     /**
      * Create new agenda
+     *
      * @param agendaTO
      * @return agenda
      * @throws Exception
@@ -56,6 +57,7 @@ public class AgendaController {
 
     /**
      * Open votting agenda
+     *
      * @param idAgenda
      * @return Voting Status
      * @throws Exception
@@ -76,6 +78,7 @@ public class AgendaController {
 
     /**
      * Associate voting
+     *
      * @param idAgenda
      * @return Vote
      * @throws Exception
@@ -97,8 +100,10 @@ public class AgendaController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(this.toService.getVoteResponse(vote));
     }
+
     /**
      * Get voting result
+     *
      * @param idAgenda
      * @return Vote
      * @throws Exception

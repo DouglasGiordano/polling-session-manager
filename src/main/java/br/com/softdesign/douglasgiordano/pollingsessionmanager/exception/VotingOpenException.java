@@ -1,6 +1,11 @@
 package br.com.softdesign.douglasgiordano.pollingsessionmanager.exception;
 
-public class VotingOpenException extends Exception{
+
+/**
+ * @author Douglas Giordano
+ * Class Voting Open Exception
+ */
+public class VotingOpenException extends Exception {
     public VotingOpenException(String message, Throwable cause) {
         super(message, cause);
     }

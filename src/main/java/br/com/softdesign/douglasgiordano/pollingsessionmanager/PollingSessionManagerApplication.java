@@ -10,15 +10,15 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableAsync
 public class PollingSessionManagerApplication {
 
-	public static final String queueName = "polling-session-result";
+    public static final String queueName = "polling-session-result";
 
-	public static void main(String[] args) {
-		SpringApplication.run(PollingSessionManagerApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(PollingSessionManagerApplication.class, args);
+    }
 
-	@Bean
-	Queue queue() {
-		return new Queue(queueName, false);
-	}
+    @Bean
+    Queue queue() {
+        return new Queue(queueName, false);
+    }
 
 }

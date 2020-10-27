@@ -1,6 +1,10 @@
 package br.com.softdesign.douglasgiordano.pollingsessionmanager.exception;
 
-public class InvalidCpfException extends Exception{
+/**
+ * @author Douglas Giordano
+ * Class Invalid Cpf Exception
+ */
+public class InvalidCpfException extends Exception {
     public InvalidCpfException(String message, Throwable cause) {
         super(message, cause);
     }

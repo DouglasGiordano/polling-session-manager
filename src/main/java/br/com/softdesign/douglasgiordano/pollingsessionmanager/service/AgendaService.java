@@ -5,7 +5,6 @@ import br.com.softdesign.douglasgiordano.pollingsessionmanager.exception.EntityN
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.exception.UnableVoteException;
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.exception.VotingClosedException;
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.exception.VotingOpenException;
-import br.com.softdesign.douglasgiordano.pollingsessionmanager.messaging.ResultPollingQueueSender;
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.model.entities.*;
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.persistence.AgendaReactiveRepository;
 import lombok.extern.java.Log;
@@ -17,9 +16,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+/**
+ * @author Douglas Montanha Giordano
+ * Service logic for the agenda.
+ */
 @Service
 @Log
 @EnableAsync
@@ -32,16 +34,18 @@ public class AgendaService {
 
     /**
      * Save Agenda
+     *
      * @param agenda
      * @return Agenda With Id
      */
-    public Agenda saveAgenda(Agenda agenda){
+    public Agenda saveAgenda(Agenda agenda) {
         log.info("Creating new agenda..");
         return repository.save(agenda).block();
     }
 
     /**
      * Open Agenda Voting
+     *
      * @param idAgenda
      * @return Agenda With Id
      */
@@ -57,18 +61,19 @@ public class AgendaService {
 
     /**
      * Vote
+     *
      * @param idAgenda
      * @return Agenda With Id
      */
     public Agenda vote(String idAgenda, Vote vote) throws EntityNotFoundException, VotingOpenException, VotingClosedException, UnableVoteException {
         Agenda agenda = findAgendaById(idAgenda);
         VotingAgenda votingAgenda = this.getAgendaStatusSessionVote(agenda);
-        if(this.checkEnableToVote(vote.getAssociate())){
-            log.info("Voting agenda '"+agenda.getDescription()+"'..");
-            if(agenda.getVoting().getVotes() == null){
+        if (this.checkEnableToVote(vote.getAssociate())) {
+            log.info("Voting agenda '" + agenda.getDescription() + "'..");
+            if (agenda.getVoting().getVotes() == null) {
                 agenda.getVoting().setVotes(new ArrayList<Vote>());
             }
-            if(!agenda.getVoting().getVotes().contains(vote)){
+            if (!agenda.getVoting().getVotes().contains(vote)) {
                 agenda.getVoting().getVotes().add(vote);
                 agenda = repository.save(agenda).block();
             } else {
@@ -80,6 +85,7 @@ public class AgendaService {
 
     /**
      * Get agenda e check status voting
+     *
      * @param agenda
      * @return voting agenda
      * @throws VotingOpenException
@@ -87,12 +93,12 @@ public class AgendaService {
      */
     private VotingAgenda getAgendaStatusSessionVoting(Agenda agenda) throws VotingOpenException, VotingClosedException {
         VotingAgenda votingAgenda = agenda.getVoting();
-        if(votingAgenda == null) {
+        if (votingAgenda == null) {
             votingAgenda = new VotingAgenda();
             votingAgenda.setStatus(EnumVotingStatus.OPEN);
-        } else if(votingAgenda.getStatus() == EnumVotingStatus.OPEN){
+        } else if (votingAgenda.getStatus() == EnumVotingStatus.OPEN) {
             throw new VotingOpenException("The voting session is now open.");
-        } else if(votingAgenda.getStatus() == EnumVotingStatus.CLOSED){
+        } else if (votingAgenda.getStatus() == EnumVotingStatus.CLOSED) {
             throw new VotingClosedException("The voting session is closed.");
         }
 
@@ -101,6 +107,7 @@ public class AgendaService {
 
     /**
      * Get agenda e check status voting to vote
+     *
      * @param agenda
      * @return voting agenda
      * @throws VotingOpenException
@@ -108,10 +115,11 @@ public class AgendaService {
      */
     private VotingAgenda getAgendaStatusSessionVote(Agenda agenda) throws VotingOpenException, VotingClosedException {
         VotingAgenda votingAgenda = agenda.getVoting();
-        if(votingAgenda == null) {
+        if (votingAgenda == null) {
             votingAgenda = new VotingAgenda();
             votingAgenda.setStatus(EnumVotingStatus.OPEN);
-        } if(votingAgenda.getStatus() == EnumVotingStatus.CLOSED){
+        }
+        if (votingAgenda.getStatus() == EnumVotingStatus.CLOSED) {
             throw new VotingClosedException("The voting session is closed.");
         }
 
@@ -120,6 +128,7 @@ public class AgendaService {
 
     /**
      * Check status to associate vote
+     *
      * @param associate
      * @return voting agenda
      * @throws VotingOpenException
@@ -132,12 +141,12 @@ public class AgendaService {
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<StatusAssociateTO> response
                 = restTemplate.getForEntity(url, StatusAssociateTO.class);
-        if(response.getStatusCode() != HttpStatus.OK){
+        if (response.getStatusCode() != HttpStatus.OK) {
             throw new UnableVoteException("An error occurred while consulting the CPF.");
         }
         EnumStatusAssociate status = response.getBody().getStatus();
         associate.setStatus(status);
-        if(status == EnumStatusAssociate.UNABLE_TO_VOTE){
+        if (status == EnumStatusAssociate.UNABLE_TO_VOTE) {
             throw new UnableVoteException("Associate not eligible to vote.");
         }
         return true;
@@ -146,12 +155,13 @@ public class AgendaService {
 
     /**
      * Find Agenda by Id
+     *
      * @param id
      * @return Agenda
      */
     public Agenda findAgendaById(String id) throws EntityNotFoundException {
         Agenda agenda = repository.findById(id).block();
-        if(agenda == null){
+        if (agenda == null) {
             throw new EntityNotFoundException("No records found.");
         }
         return agenda;
@@ -159,6 +169,7 @@ public class AgendaService {
 
     /**
      * Count e get result
+     *
      * @param idAgenda
      * @return voting result
      * @throws EntityNotFoundException
@@ -173,7 +184,7 @@ public class AgendaService {
         VotingResult result = new VotingResult();
         result.setNumNo(Long.bitCount(noCount));
         result.setNumYes(Long.bitCount(yesCount));
-        if(yesCount > noCount){
+        if (yesCount > noCount) {
             result.setResult(EnumVote.YES);
         } else {
             result.setResult(EnumVote.NO);

@@ -1,11 +1,9 @@
 package br.com.softdesign.douglasgiordano.pollingsessionmanager.exception.config;
 
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.exception.*;
-import br.com.softdesign.douglasgiordano.pollingsessionmanager.exception.config.ApiError;
 import lombok.extern.java.Log;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +15,13 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.util.logging.Level;
 
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
+/**
+ * @author Douglas Giordano
+ * Class to handler exceptions.
+ */
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
 @Log

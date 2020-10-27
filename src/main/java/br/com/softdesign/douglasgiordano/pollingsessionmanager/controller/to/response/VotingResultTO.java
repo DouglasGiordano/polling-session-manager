@@ -1,6 +1,5 @@
 package br.com.softdesign.douglasgiordano.pollingsessionmanager.controller.to.response;
 
-import br.com.softdesign.douglasgiordano.pollingsessionmanager.model.entities.VotingResult;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NonNull;
@@ -18,7 +17,7 @@ public class VotingResultTO {
     @NonNull
     private String result;
 
-    public VotingResultTO(){
+    public VotingResultTO() {
 
     }
 }

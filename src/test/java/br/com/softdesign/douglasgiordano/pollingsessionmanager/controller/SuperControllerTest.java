@@ -19,6 +19,7 @@ public class SuperControllerTest {
     @Autowired
     protected MockMvc mvc;
     ObjectMapper objectMapper;
+
     /**
      * Initializes the mock of web service resources.
      */
@@ -32,6 +33,7 @@ public class SuperControllerTest {
 
     /**
      * Used to transform objects into json.
+     *
      * @param obj
      * @return
      * @throws JsonProcessingException
@@ -42,7 +44,8 @@ public class SuperControllerTest {
 
     /**
      * Used to map objects sent by the service.
-     * @param json object json
+     *
+     * @param json  object json
      * @param clazz class to be transformed into object
      * @param <T>
      * @return
@@ -58,11 +61,12 @@ public class SuperControllerTest {
 
     /**
      * Check api error attr
+     *
      * @param error
      * @param expectedException
      */
-    public void checkAttrApiError(ApiError error, String expectedException){
-        if(error != null){
+    public void checkAttrApiError(ApiError error, String expectedException) {
+        if (error != null) {
             Assertions.assertEquals(expectedException, error.getMessage());
         } else {
             Assertions.fail("Object is null!");
@@ -71,11 +75,12 @@ public class SuperControllerTest {
 
     /**
      * Check api error attr OR
+     *
      * @param error
      * @param expectedException
      */
-    public void checkAttrApiErrorOr(ApiError error, String [] expectedException){
-        if(error != null){
+    public void checkAttrApiErrorOr(ApiError error, String[] expectedException) {
+        if (error != null) {
             Assertions.assertEquals(expectedException, error.getMessage());
         } else {
             Assertions.fail("Object is null!");

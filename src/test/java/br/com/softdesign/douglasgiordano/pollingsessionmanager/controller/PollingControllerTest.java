@@ -1,6 +1,5 @@
 package br.com.softdesign.douglasgiordano.pollingsessionmanager.controller;
 
-import br.com.softdesign.douglasgiordano.pollingsessionmanager.controller.to.response.AgendaTO;
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.controller.to.response.SessionPollingStatusTO;
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.exception.config.ApiError;
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.model.Path;
@@ -26,27 +25,28 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class PollingControllerTest extends SuperControllerTest{
+public class PollingControllerTest extends SuperControllerTest {
     @Autowired
     private AgendaReactiveRepository repository;
 
     private Agenda agenda;
 
     @BeforeEach
-    public void beforeEach(){
+    public void beforeEach() {
         this.agenda = new Agenda();
         this.agenda.setDescription("My Agenda Polling!");
         this.agenda = repository.save(agenda).block();
     }
 
     @AfterEach
-    public void afterEach(){
+    public void afterEach() {
         this.repository.deleteById(this.agenda.getId());
         this.agenda = null;
     }
 
     /**
      * Request open session polling
+     *
      * @param status
      * @return
      * @throws Exception
@@ -66,12 +66,13 @@ public class PollingControllerTest extends SuperControllerTest{
 
     /**
      * check result open polling
+     *
      * @param sessionTo
      * @param expectedDescription
      * @param expectedStatus
      */
-    public void checkAttrSessionPollingStatusTo(SessionPollingStatusTO sessionTo, String expectedDescription, String expectedStatus){
-        if(sessionTo != null){
+    public void checkAttrSessionPollingStatusTo(SessionPollingStatusTO sessionTo, String expectedDescription, String expectedStatus) {
+        if (sessionTo != null) {
             Assertions.assertEquals(expectedDescription, sessionTo.getDescription());
             Assertions.assertEquals(expectedStatus, sessionTo.getStatus());
         } else {
@@ -81,6 +82,7 @@ public class PollingControllerTest extends SuperControllerTest{
 
     /**
      * Opening a valid session
+     *
      * @throws Exception
      */
     @Test
@@ -93,6 +95,7 @@ public class PollingControllerTest extends SuperControllerTest{
 
     /**
      * Opening a session of an agenda that does not exist.
+     *
      * @throws Exception
      */
     @Test
@@ -108,6 +111,7 @@ public class PollingControllerTest extends SuperControllerTest{
 
     /**
      * Trying to open an already open voting session.
+     *
      * @throws Exception
      */
     @Test
@@ -123,6 +127,7 @@ public class PollingControllerTest extends SuperControllerTest{
 
     /**
      * Trying to open a closed voting session.
+     *
      * @throws Exception
      */
     @Test

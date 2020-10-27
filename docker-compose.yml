@@ -16,9 +16,9 @@ services:
 
   mongo:
     image: mongo
-    #environment:
+      #environment:
       #MONGO_INITDB_ROOT_USERNAME: root
-      #MONGO_INITDB_ROOT_PASSWORD: myrootpolling
+    #MONGO_INITDB_ROOT_PASSWORD: myrootpolling
     ports:
       - "27017:27017"
     volumes:

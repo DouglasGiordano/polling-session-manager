@@ -17,7 +17,7 @@ public class Vote {
     @NonNull
     private EnumVote vote;
 
-    public Vote(){
+    public Vote() {
 
     }
 }

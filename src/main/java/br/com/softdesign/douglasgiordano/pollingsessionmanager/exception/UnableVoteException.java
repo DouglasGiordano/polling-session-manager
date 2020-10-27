@@ -1,6 +1,10 @@
 package br.com.softdesign.douglasgiordano.pollingsessionmanager.exception;
 
-public class UnableVoteException extends Exception{
+/**
+ * @author Douglas Giordano
+ * Class Unable Vote Exception
+ */
+public class UnableVoteException extends Exception {
     public UnableVoteException(String message, Throwable cause) {
         super(message, cause);
     }

@@ -1,9 +1,9 @@
 package br.com.softdesign.douglasgiordano.pollingsessionmanager.controller.to.response;
 
 import lombok.AccessLevel;
+import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import lombok.Data;
 
 /**
  * @author Douglas Giordano
@@ -17,7 +17,7 @@ public class SessionPollingStatusTO {
     @NonNull
     private String status;
 
-    public SessionPollingStatusTO(){
+    public SessionPollingStatusTO() {
 
     }
 }

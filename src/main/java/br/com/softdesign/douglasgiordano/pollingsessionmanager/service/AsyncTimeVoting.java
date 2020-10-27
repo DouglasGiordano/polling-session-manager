@@ -32,23 +32,30 @@ public class AsyncTimeVoting {
     @Autowired
     private ResultPollingQueueSender resultSender;
 
+    /**
+     * Search for an agenda and open it for voting. After a certain period of time the voting session is closed.
+     * The result is generated and sent to a queue at RabbitMQ.
+     *
+     * @param idAgenda
+     * @throws EntityNotFoundException
+     */
     @Async
     public void asyncMethodTimeVoting(String idAgenda) throws EntityNotFoundException {
         Agenda agenda = service.findAgendaById(idAgenda);
         int time = agenda.getVoting().getTimeSeconds();
         log.info("Execute method asynchronously..");
-        log.info("Session "+agenda.getId()+ " open for " + time + " seconds.");
+        log.info("Session " + agenda.getId() + " open for " + time + " seconds.");
         try {
-            Thread.sleep(agenda.getVoting().getTimeSeconds()*1000);
+            Thread.sleep(agenda.getVoting().getTimeSeconds() * 1000);
             agenda = service.findAgendaById(idAgenda);
             agenda.getVoting().setStatus(EnumVotingStatus.CLOSED);
             VotingResult result = this.service.getResultPolling(agenda.getId());
             agenda.getVoting().setResult(result);
             this.service.saveAgenda(agenda);
-            log.info("Session "+agenda.getId()+ " closed.");
+            log.info("Session " + agenda.getId() + " closed.");
             this.resultSender.send(agenda);
         } catch (InterruptedException | JsonProcessingException e) {
-            log.log(Level.SEVERE, "Error thread wait voting.." +e.getMessage());
+            log.log(Level.SEVERE, "Error thread wait voting.." + e.getMessage());
         }
     }
 

@@ -5,6 +5,10 @@ import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * @author Douglas Montanha Giordano
+ * Voting Agenda Associate (Associado)
+ */
 @Data
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
 public class Associate {
@@ -12,7 +16,7 @@ public class Associate {
     private String cpf;
     private EnumStatusAssociate status;
 
-    public Associate(){
+    public Associate() {
 
     }
 }
