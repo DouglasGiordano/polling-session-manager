@@ -2,8 +2,7 @@ package br.com.softdesign.douglasgiordano.pollingsessionmanager.service;
 
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.exception.EntityNotFoundException;
 import br.com.softdesign.douglasgiordano.pollingsessionmanager.model.entities.Agenda;
-import br.com.softdesign.douglasgiordano.pollingsessionmanager.model.entities.VotingStatus;
-import br.com.softdesign.douglasgiordano.pollingsessionmanager.persistence.AgendaReactiveRepository;
+import br.com.softdesign.douglasgiordano.pollingsessionmanager.model.entities.EnumVotingStatus;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -28,7 +27,7 @@ public class AsyncTimeVoting {
         log.info("Session "+agenda.getId()+ " open for " + time + " seconds.");
         try {
             Thread.sleep(agenda.getVoting().getTimeSeconds()*1000);
-            agenda.getVoting().setStatus(VotingStatus.CLOSED);
+            agenda.getVoting().setStatus(EnumVotingStatus.CLOSED);
             this.service.saveAgenda(agenda);
             log.info("Session "+agenda.getId()+ " closed.");
         } catch (InterruptedException e) {

@@ -15,19 +15,4 @@ public class PollingSessionManagerApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(PollingSessionManagerApplication.class, args);
 	}
-
-	/**
-	 * Task async executor
-	 * @return Executor
-	 */
-	@Bean
-	public Executor taskExecutor() {
-		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-		executor.setCorePoolSize(2);
-		executor.setMaxPoolSize(2);
-		executor.setQueueCapacity(500);
-		executor.setThreadNamePrefix("PollingSession-");
-		executor.initialize();
-		return executor;
-	}
 }

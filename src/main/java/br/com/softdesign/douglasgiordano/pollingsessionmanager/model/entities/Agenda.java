@@ -14,7 +14,7 @@ public class Agenda {
     private String id;
     @NonNull
     private String description;
-    private List<Associate> associates;
+    //private List<Associate> associates;
     private VotingAgenda voting;
 
     public Agenda(){

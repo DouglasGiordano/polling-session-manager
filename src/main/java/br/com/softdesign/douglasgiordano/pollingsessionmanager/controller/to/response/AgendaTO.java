@@ -1,4 +1,4 @@
-package br.com.softdesign.douglasgiordano.pollingsessionmanager.controller.responseTO;
+package br.com.softdesign.douglasgiordano.pollingsessionmanager.controller.to.response;
 
 import lombok.Data;
 
@@ -7,7 +7,7 @@ import lombok.Data;
  * Transfer Object to Agenda Response.
  */
 @Data
-public class AgendaResponseTO {
+public class AgendaTO {
     private String id;
     private String description;
 }
