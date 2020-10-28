@@ -41,19 +41,13 @@ Install Docker and Docker-Compose
 ### How to use?
 The API consists of 4 paths 1 a queue.
 
-- Create agenda: [POST Request] localhost:8080/api/v1/agenda
+- Create agenda[POST Request]: Create a new agenda (Pauta) (localhost:8080/api/v1/agenda).
 
-- Open Voting Session: [POST Request] localhost:8080/api/v1/agenda/[ID Agenda]/voting/open
-  
-> Example: http://localhost:8080/api/v1/agenda/5f97b2b0f9e9b543df8de7bc/voting/open
+- Open Voting Session [POST Request]: Opens a polling session for an agenda for a specified period of time. After the time the agenda is closed (localhost:8080/api/v1/agenda/[ID Agenda]/voting/open).
 
-- Vote: [POST Request] localhost:8080/api/v1/agenda/<ID Agenda>/voting/vote
-  
-> Example: http://localhost:8080/api/v1/agenda/5f97b2b0f9e9b543df8de7bc/voting/vote
+- Vote [POST Request]: Records a member's vote (valid CPF) in a session open for voting (localhost:8080/api/v1/agenda/[ID Agenda]/voting/vote).
 
-- Access Results (API): [GET Request] localhost:8080/api/v1/agenda/[ID Agenda]/voting/result
-  
-> Example: http://localhost:8080/api/v1/agenda/5f97b2b0f9e9b543df8de7bc/voting/result
+- Access Results (API) [GET Request]: Returns the number of YES and NO votes and the result of the vote (localhost:8080/api/v1/agenda/[ID Agenda]/voting/result).
   
 - Access Results (Queue): The queue name is "polling-session-result".
 
