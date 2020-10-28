@@ -5,6 +5,15 @@ Access the wiki to see installation requirements.
 
 https://github.com/DouglasGiordano/polling-session-manager/wiki/Requirements
 
+### Technologies
+- Java 11
+- Spring Boot
+- Mongo DB
+- RabbitMQ
+- Jackson
+- JUnit 5
+- Model Mapper
+
 ### RUN on Ubuntu
 Install Gradle, MongoDB, RabbitMQ and Java 11
 Execute MongoDB (Port 27017) and RabbitMQ (Port 5672|15672)
@@ -29,7 +38,7 @@ Install Docker and Docker-Compose
 
 `docker-compose up -d`
 
-### Use
+### How to use?
 The API consists of 4 paths 1 a queue.
 
 - Create agenda: [POST Request] localhost:8080/api/v1/agenda
@@ -46,7 +55,7 @@ The API consists of 4 paths 1 a queue.
   
 > Example: http://localhost:8080/api/v1/agenda/5f97b2b0f9e9b543df8de7bc/voting/result
   
-- Access Results (Queue): The queue name is "polling-session-result"
+- Access Results (Queue): The queue name is "polling-session-result".
 
 ### Documentation
 The swagger was configured in the project. To access use the URL below.
