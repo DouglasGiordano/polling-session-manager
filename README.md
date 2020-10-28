@@ -1,9 +1,7 @@
 # Polling Session Manager
 Rest API to manage polling sessions.
 
-Access the wiki to see installation requirements.
-
-https://github.com/DouglasGiordano/polling-session-manager/wiki/Requirements
+Access the wiki to see installation [Requirements](https://github.com/DouglasGiordano/polling-session-manager/wiki/Requirements).
 
 ### Technologies
 - Java 11
@@ -41,15 +39,15 @@ Install Docker and Docker-Compose
 ### How to use?
 The API consists of 4 paths 1 a queue.
 
-- Create agenda[POST Request]: Create a new agenda (Pauta) (localhost:8080/api/v1/agenda).
+- **Create agenda[POST Request]:** Create a new agenda (Pauta) (localhost:8080/api/v1/agenda).
 
-- Open Voting Session [POST Request]: Opens a polling session for an agenda for a specified period of time. After the time the agenda is closed (localhost:8080/api/v1/agenda/[ID Agenda]/voting/open).
+-  **Open Voting Session [POST Request]:** Opens a polling session for an agenda for a specified period of time. After the time the agenda is closed (localhost:8080/api/v1/agenda/[ID Agenda]/voting/open).
 
-- Vote [POST Request]: Records a member's vote (valid CPF) in a session open for voting (localhost:8080/api/v1/agenda/[ID Agenda]/voting/vote).
+- **Vote [POST Request]:** Records a member's vote (valid CPF) in a session open for voting (localhost:8080/api/v1/agenda/[ID Agenda]/voting/vote).
 
-- Access Results (API) [GET Request]: Returns the number of YES and NO votes and the result of the vote (localhost:8080/api/v1/agenda/[ID Agenda]/voting/result).
+- **Access Results (API) [GET Request]:** Returns the number of YES and NO votes and the result of the vote (localhost:8080/api/v1/agenda/[ID Agenda]/voting/result).
   
-- Access Results (Queue): The queue name is "polling-session-result".
+- **Access Results (Queue):** The queue name is "polling-session-result".
 
 ### Documentation
 The swagger was configured in the project. To access use the URL below.
